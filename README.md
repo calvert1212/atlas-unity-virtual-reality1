@@ -30,4 +30,4 @@ scripting different solutions regarding emote recognition.
 
 LinkedIn: https://www.linkedin.com/in/slash9chadcalvert/
 
-Twitter/X: x.com/calvert1212
+Twitter/X: https://x.com/calvert1212

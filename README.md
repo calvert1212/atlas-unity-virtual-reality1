@@ -1,7 +1,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/othneildrew/Best-README-Template">
+  <a href="https://github.com/calvert1212/atlas-unity-virtual-reality/blob/main/image_2024-08-01_075937213.png">
     <img src="images/logo.png" alt="Logo" width="80" height="80">
   </a>
 

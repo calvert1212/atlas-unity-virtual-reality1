@@ -29,4 +29,5 @@ scripting different solutions regarding emote recognition.
 <h3 align="center">Socials</h3>
 
 LinkedIn: https://www.linkedin.com/in/slash9chadcalvert/
+
 Twitter/X: x.com/calvert1212

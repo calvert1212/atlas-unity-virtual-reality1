@@ -5,7 +5,7 @@
     <img src="images/logo.png" alt="Logo" width="80" height="80">
   </a>
 
-  <h3 align="center">Unity VR Showcase</h3>
+  <h3 align="left">Unity VR Showcase</h3>
 
 My name is Chad Calvert and this is a showcase of various Unity VR projects I completed as part of my curriculum at 
 Atlas School Tulsa. The projects demonstrate various fun functionalities of Unity VR, including 360 degree movie

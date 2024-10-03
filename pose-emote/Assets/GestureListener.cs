@@ -4,52 +4,119 @@ using UnityEngine.InputSystem;
 
 public class GestureListener : MonoBehaviour
 {
-    // Reference to the action-based controllers
-    public ActionBasedController leftController;  // Assign in Inspector
-    public ActionBasedController rightController; // Assign in Inspector
-    public GameObject imageReaction;              // The image that reacts to gestures
-
+    public ActionBasedController leftController;
+    public ActionBasedController rightController;
+    public GameObject waveReactionImage;
+    public GameObject facePalmReactionImage;
+    public GameObject xArmsReactionImage;
+    public GameObject thumbsUpReactionImage;
     private bool isWaving = false;
+    private bool isFacePalming = false;
+    private bool isXArms = false;
+    private bool isThumbsUp = false;
+
+    private float waveThreshold = 2.0f;
     private float waveTimer = 0f;
-    private float waveThreshold = 2.0f;           // Time threshold for wave gesture
 
     void Update()
     {
-        // Get the current position of the right hand controller
-        Vector3 rightControllerPosition = rightController.positionAction.action.ReadValue<Vector3>();
-        Vector3 leftControllerPosition = leftController.positionAction.action.ReadValue<Vector3>();
+        DetectWaveGesture();
+        DetectFacePalmEmote();
+        DetectXArmsPose();
+        DetectThumbsUpGesture();
+    }
 
-        // Detecting a simple wave gesture (raising the right hand)
-        if (rightControllerPosition.y > 1.5f && !isWaving)
+    // Waving detector
+    void DetectWaveGesture()
+    {
+        Vector3 rightHandPos = rightController.positionAction.action.ReadValue<Vector3>();
+
+        if (rightHandPos.y > 1.5f && !isWaving)
         {
             isWaving = true;
-            waveTimer = 0f; // Start timing the wave gesture
+            waveTimer = 0f;
         }
 
-        // Increment wave timer when waving
         if (isWaving)
         {
             waveTimer += Time.deltaTime;
 
-            // Gesture is considered complete if the timer exceeds threshold
             if (waveTimer >= waveThreshold)
             {
-                ShowReactionImage(); // Trigger image reaction
-                isWaving = false;    // Reset waving state
+                SwapImage(waveReactionImage);
+                isWaving = false;
             }
         }
 
-        // Reset wave state if hand is lowered
-        if (rightControllerPosition.y < 1.5f)
+        if (rightHandPos.y < 1.5f)
         {
             isWaving = false;
         }
     }
 
-    // This function shows the image when a gesture is detected
-    void ShowReactionImage()
+    // Facepalm Detector
+    void DetectFacePalmEmote()
     {
-        imageReaction.SetActive(true);
-        // You can add more logic to change the image, animate it, etc.
+        Vector3 rightHandPos = rightController.positionAction.action.ReadValue<Vector3>();
+
+        // Checks if hand near head height and in front of face
+        if (rightHandPos.y > 1.3f && Mathf.Abs(rightHandPos.z) < 0.3f && !isFacePalming)
+        {
+            SwapImage(facePalmReactionImage);
+            isFacePalming = true;
+        }
+
+        if (rightHandPos.y < 1.0f)
+        {
+            isFacePalming = false;
+        }
+    }
+
+    // X arms detector
+    void DetectXArmsPose()
+    {
+        Vector3 rightHandPos = rightController.positionAction.action.ReadValue<Vector3>();
+        Vector3 leftHandPos = leftController.positionAction.action.ReadValue<Vector3>();
+
+        // Example condition: Hands crossing each other at chest height
+        if (Mathf.Abs(rightHandPos.x - leftHandPos.x) < 0.2f && rightHandPos.y > 1.0f && leftHandPos.y > 1.0f && !isXArms)
+        {
+            SwapImage(xArmsReactionImage);
+            isXArms = true;
+        }
+
+        if (Mathf.Abs(rightHandPos.x - leftHandPos.x) > 0.5f || rightHandPos.y < 1.0f || leftHandPos.y < 1.0f)
+        {
+            isXArms = false;
+        }
+    }
+
+    // Thumbs Up Detector, using hand tracking via XR Hands (or simulated via trigger press)
+    void DetectThumbsUpGesture()
+    {
+        // Simulated thumbs-up using the right controller's trigger press (you can replace this with XR Hands data)
+        if (rightController.selectAction.action.ReadValue<float>() > 0.9f && !isThumbsUp)
+        {
+            SwapImage(thumbsUpReactionImage);
+            isThumbsUp = true;
+        }
+
+        if (rightController.selectAction.action.ReadValue<float>() < 0.1f)
+        {
+            isThumbsUp = false;
+        }
+    }
+
+    // Swaps the image based on gesture
+    void SwapImage(GameObject reactionImage)
+    {
+        // Deactivate all reaction images first
+        waveReactionImage.SetActive(false);
+        facePalmReactionImage.SetActive(false);
+        xArmsReactionImage.SetActive(false);
+        thumbsUpReactionImage.SetActive(false);
+
+        // Activate response image
+        reactionImage.SetActive(true);
     }
 }
